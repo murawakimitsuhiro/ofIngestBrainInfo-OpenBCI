@@ -18,6 +18,7 @@ void ofDecomposeModel::startDecompose() {
         for (int i=0; i<verts.size(); i++) {
             vectors.push_back(verts[i]);
             colors.push_back(ofFloatColor(0.5, 0.8, 1.0, 1.0));
+            speeds.push_back(ofVec3f(0, 0, 3));
         }
         
         ofVec3f vectorArray[verts.size()];
@@ -29,6 +30,21 @@ void ofDecomposeModel::startDecompose() {
         
         vbo.setVertexData(vectorArray, verts.size(), GL_DYNAMIC_DRAW);
         vbo.setColorData(colorArray, verts.size(), GL_DYNAMIC_DRAW);
+    }
+}
+
+void ofDecomposeModel::update() {
+    setScaleNormalization(false);
+    
+    if (state == decomposting) {
+        for (int i=0; i<vectors.size(); i++) {
+            vectors[i] += speeds[i];
+            if (vectors[i].z > 100) {
+                speeds[i].x = ofRandom(-12, 12);
+                speeds[i].y = ofRandom(-12, 12);
+                //vectors[i].z = 100;
+            }
+        }
     }
 }
 
@@ -52,7 +68,7 @@ void ofDecomposeModel::drawSolid() {
 
 void ofDecomposeModel::drawDecomposing() {
     float elapsedTime = ofGetElapsedTimef() - decomposeBeginTime;
-    
+    /*
     ofVboMesh mesh = getMesh(0);
     
     ofPushMatrix();
@@ -62,15 +78,15 @@ void ofDecomposeModel::drawDecomposing() {
         verts[i].z += elapsedTime * 10;
     }
    
-    ofSetColor(126, 230, 255, 200);
-    mesh.drawWireframe();
-    ofPopMatrix();
+    //ofSetColor(126, 230, 255, 200);
+    //mesh.drawWireframe();
+    ofPopMatrix();*/
     
     ofVec3f vectorArray[vectors.size()];
     for (int i=0; i<vectors.size(); i++) {
-        vectorArray[i] = verts[i];
-        vectorArray[i].x += 30;
-        vectorArray[i].y += 30;
+        vectorArray[i] = vectors[i];//verts[i];
+        //vectorArray[i].x += 30;
+        //vectorArray[i].y += 30;
     }
     
     vbo.updateVertexData(vectorArray, vectors.size());

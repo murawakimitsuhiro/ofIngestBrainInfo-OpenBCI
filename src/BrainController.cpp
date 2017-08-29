@@ -27,14 +27,14 @@ void BrainController::setupOSCMessageReceive() {
 
 void BrainController::update() {
     for (int i = 0; i < BrainModelData::modelNum; i++) {
-        models[i].setScaleNormalization(false);
+        models[i].update();
     }
     
     //decomposed by time
     if (nextDecomposeNum * 3 - int(ofGetElapsedTimef()) < 0) {
         models[nextDecomposeNum].startDecompose();
         
-        if (nextDecomposeNum == BrainModelData::modelNum - 1) {
+        if (nextDecomposeNum == BrainModelData::modelNum - 2) {
             nextDecomposeNum = 0;
         } else {
             nextDecomposeNum++;
