@@ -24,7 +24,6 @@ public:
     void deviceOrientationChanged(int newOrientation);
     
 private:
-    
     ofEasyCam cam;
     ofLight light;
     ofLight secondLight;

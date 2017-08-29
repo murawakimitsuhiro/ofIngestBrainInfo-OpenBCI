@@ -26,68 +26,41 @@ void BrainController::setupOSCMessageReceive() {
 }
 
 void BrainController::update() {
-    for (int i = 0; i < modelNum; i++) {
+    for (int i = 0; i < BrainModelData::modelNum; i++) {
         models[i].setScaleNormalization(false);
     }
     
-    if (5 < ofGetElapsedTimef()) {
-        models[debugTarget].startDecompose();
+    //decomposed by time
+    if (nextDecomposeNum * 3 - int(ofGetElapsedTimef()) < 0) {
+        models[nextDecomposeNum].startDecompose();
+        
+        if (nextDecomposeNum == BrainModelData::modelNum) {
+            nextDecomposeNum = 0;
+        } else {
+            nextDecomposeNum++;
+        }
     }
 }
 
 /* call in camera rendering */
 void BrainController::draw() {
-    for (int i = 0; i < modelNum; i++) {
-        ofSetColor(255, 10);
+    for (int i = 0; i < BrainModelData::modelNum; i++) {
         
-        /*
-        if (OSCManager::get_instance().fft[i] > 0.01) {
-            ofSetColor(0, 255, 0, 30);
-        }
-        
-        if (OSCManager::get_instance().fft[i] > 0.025) {
-            ofSetColor(0, 0, 255, 30);
-        }
-        
-        if (OSCManager::get_instance().fft[i] > 0.05) {
-            ofSetColor(255, 0, 0, 30);
-        } */
-        
-        /*
-        if (i == debugTarget) {
-            ofSetColor(255, 0, 0, 30);
-            
-            models[i].drawCustom();
-            //drawWithMesh(models[i]);
+        //decomposed brain parts
+        if(i < nextDecomposeNum) {
+            models[i].draw();
             continue;
-        }*/
-        
-        if (OSCManager::get_instance().bci[i] > 0.5) {
-            ofSetColor(255, 0, 0, 10);
         }
         
+        if (OSCManager::get_instance().bci[i / 9] > 1.0) {
+            ofSetColor(255, 0, 0, 10);
+        } else if (OSCManager::get_instance().bci[i / 9] > 0.6) {
+            ofSetColor(0, 250, 250, 10);
+        } else {
+            ofSetColor(255, 255, 255, 10);
+        }
+        
+        //normal draw
         models[i].drawWireframe();
     }
 }
-
-/*draw the model manually
-void BrainController::drawWithMesh(ofxAssimpModelLoader model){
-    
-    //get the model attributes we need
-    ofVec3f scale = model.getScale();
-    ofVec3f position = model.getPosition();
-    float normalizedScale = model.getNormalizedScale();
-    ofVboMesh mesh = model.getMesh(0);
-    
-    ofPushMatrix();
-    
-    float randX = ofRandom(-10, 10);
-    vector<ofVec3f>& verts = mesh.getVertices();
-    for(unsigned int i = 0; i < verts.size(); i++){
-        verts[i].y += randX;
-    }
-    
-    mesh.drawVertices();//drawWireframe();
-    ofPopMatrix();
-}
-*/

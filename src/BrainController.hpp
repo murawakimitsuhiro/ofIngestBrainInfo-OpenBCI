@@ -22,11 +22,12 @@
 class BrainController {
     
 private:
-    static const int modelNum = 152;
-    ofDecomposeModel models[modelNum];
+    ofDecomposeModel models[BrainModelData::modelNum];
+    int nextDecomposeNum = 0;
     
     void setupOSCMessageReceive();
     
+//debug
     int gain;
     int debugTarget;
     
