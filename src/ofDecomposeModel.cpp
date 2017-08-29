@@ -18,7 +18,7 @@ void ofDecomposeModel::startDecompose() {
         for (int i=0; i<verts.size(); i++) {
             vectors.push_back(verts[i]);
             colors.push_back(ofFloatColor(0.5, 0.8, 1.0, 1.0));
-            speeds.push_back(ofVec3f(0, 0, 3));
+            speeds.push_back(ofVec3f(0, 0, 3.5));
         }
         
         ofVec3f vectorArray[verts.size()];
@@ -42,7 +42,14 @@ void ofDecomposeModel::update() {
             if (vectors[i].z > 100) {
                 speeds[i].x = ofRandom(-12, 12);
                 speeds[i].y = ofRandom(-12, 12);
+                speeds[i].z = 5.5;
+                
+                //float alpha = (vectors[i].z - 100) / 100;
+                
+                //colors[i] = ofFloatColor(0.5, 0.8, 1.0, alpha);
                 //vectors[i].z = 100;
+            } else if(vectors[i].z > 200) {
+                state = decomposed;
             }
         }
     }
@@ -83,13 +90,16 @@ void ofDecomposeModel::drawDecomposing() {
     ofPopMatrix();*/
     
     ofVec3f vectorArray[vectors.size()];
+    ofFloatColor colorArray[colors.size()];
     for (int i=0; i<vectors.size(); i++) {
         vectorArray[i] = vectors[i];//verts[i];
+        colorArray[i] = colors[i];
         //vectorArray[i].x += 30;
         //vectorArray[i].y += 30;
     }
     
     vbo.updateVertexData(vectorArray, vectors.size());
+    vbo.updateColorData(colorArray, colors.size());
     
     glPointSize(1);
     vbo.draw(GL_POINTS, 0, vectors.size());
