@@ -34,7 +34,7 @@ void BrainController::update() {
     if (nextDecomposeNum * 3 - int(ofGetElapsedTimef()) < 0) {
         models[nextDecomposeNum].startDecompose();
         
-        if (nextDecomposeNum == BrainModelData::modelNum) {
+        if (nextDecomposeNum == BrainModelData::modelNum - 1) {
             nextDecomposeNum = 0;
         } else {
             nextDecomposeNum++;
