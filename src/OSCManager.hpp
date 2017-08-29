@@ -44,7 +44,7 @@ public:
     }
     
     float fft[512];
-    float timeSeries
+    float bci[16];
     
     void setup(int fromPort);
     void update();

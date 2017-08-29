@@ -62,6 +62,10 @@ void BrainController::draw() {
             continue;
         }*/
         
+        if (OSCManager::get_instance().bci[i] > 0.5) {
+            ofSetColor(255, 0, 0, 10);
+        }
+        
         models[i].drawWireframe();
     }
 }
