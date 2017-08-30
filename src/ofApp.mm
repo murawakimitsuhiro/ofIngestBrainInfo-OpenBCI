@@ -13,12 +13,11 @@ void ofApp::setup(){
     ofEnableSeparateSpecularLight();
     ofSetOrientation(OF_ORIENTATION_90_LEFT);
     
-    firstFbo.allocate(1200, 675);
-    firstFbo.setUseTexture(true);
-    
 //camera
     cam.setDistance(250);
     secondCam.setDistance(250);
+    
+    setupViewPorts();
     
 /*light setup
     ofFloatColor initAmbColor = ofFloatColor(0.8, 0.8, 0.8,1.0);
@@ -43,6 +42,26 @@ void ofApp::setup(){
     brain.setup();
     
     OSCManager::get_instance().setMessageReceiver("/camera_angle", cameraAngle);
+    
+    camPosGui.setup();
+}
+
+void ofApp::setupViewPorts() {
+	float xOffset = ofGetWidth() / 3;
+	float yOffset = ofGetHeight() / 4;
+
+    viewMain.x = camPosGui.x;//xOffset;
+    viewMain.y = camPosGui.y;//0;
+	viewMain.width = xOffset * 2;
+	viewMain.height = ofGetHeight();
+    
+    /*
+	for(int i = 0; i < 4; i++){
+		viewGrid[i].x = 0;
+		viewGrid[i].y = yOffset * i;
+		viewGrid[i].width = xOffset;
+		viewGrid[i].height = yOffset;
+	}*/
 }
 
 //--------------------------------------------------------------
@@ -67,26 +86,6 @@ void ofApp::update(){
     //secondCam.rotate(270, cam.getLookAtDir());
     
     brain.update();
-    /*
-    firstFbo.begin();
-    ofClear(0);
-    
-    ofEnableDepthTest();
-    
-    ofEnableBlendMode(OF_BLENDMODE_ADD);
-    
-    cam.begin();
-    ofPushStyle();
-   
-    brain.draw();
-    
-    ofPopStyle();
-    cam.end();
-    
-    ofDisableDepthTest();
-    
-    firstFbo.end();
-     */
 }
 
 //--------------------------------------------------------------
@@ -95,14 +94,14 @@ void ofApp::draw(){
     
     ofEnableBlendMode(OF_BLENDMODE_ADD);
     
-    cam.begin();
+    cam.begin(viewMain);
     ofPushStyle();
    
     brain.draw();
     
     ofPopStyle();
     cam.end();
-    
+    /*
     secondCam.begin();
     ofPushStyle();
    
@@ -110,11 +109,13 @@ void ofApp::draw(){
     
     ofPopStyle();
     secondCam.end();
+     */
     
     ofDisableDepthTest();
     
     //ofDrawBitmapString(test, 20, 20);
     //firstFbo.draw(0, 0, 1000, 1000);
+    camPosGui.draw();
 }
 
 //--------------------------------------------------------------
@@ -134,7 +135,7 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
 
 //--------------------------------------------------------------
 void ofApp::touchUp(ofTouchEventArgs & touch){
-
+    setupViewPorts();
 }
 
 //--------------------------------------------------------------

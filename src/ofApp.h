@@ -3,6 +3,8 @@
 #include "ofxiOS.h"
 #include "BrainController.hpp"
 #include "ofxOscMessage.h"
+#include "ofxGui.h"
+#include "CameraPositionGui.hpp"
 
 class ofApp : public ofxiOSApp {
     
@@ -28,10 +30,15 @@ private:
     ofEasyCam secondCam;
     ofLight light;
     ofLight secondLight;
-    ofFbo firstFbo;
+    
+    ofRectangle viewMain;
+    ofRectangle viewGrid[4];
+    CameraPositionGui camPosGui;
     
     BrainController brain;
     
     int cameraAngle;
+    
+    void setupViewPorts();
 };
 
