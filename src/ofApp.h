@@ -26,14 +26,18 @@ public:
     void deviceOrientationChanged(int newOrientation);
     
 private:
+    /*
     ofEasyCam cam;
     ofEasyCam secondCam;
+    */
+    
+    static const int viewNum = 4;
+    ofEasyCam cameras[viewNum];
+    ofRectangle views[viewNum];
+    CameraPositionGui camPosGui[viewNum];
+    
     ofLight light;
     ofLight secondLight;
-    
-    ofRectangle viewMain;
-    ofRectangle viewGrid[4];
-    CameraPositionGui camPosGui;
     
     BrainController brain;
     

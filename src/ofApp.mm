@@ -14,8 +14,27 @@ void ofApp::setup(){
     ofSetOrientation(OF_ORIENTATION_90_LEFT);
     
 //camera
+    /*
     cam.setDistance(250);
-    secondCam.setDistance(250);
+     */
+    for(int i = 0; i < viewNum; i++){
+        cameras[i].setDistance(250);
+        switch(i) {
+            case 0:
+                camPosGui[i].setup(230, 655, 540);
+                break;
+            case 1:
+                camPosGui[i].setup(475, 460, 540);
+                break;
+            case 2:
+                camPosGui[i].setup(215, 240, 540);
+                break;
+            case 3:
+                camPosGui[i].setup(0, 460, 540);
+                break;
+            default: break;
+        }
+    }
     
     setupViewPorts();
     
@@ -42,32 +61,21 @@ void ofApp::setup(){
     brain.setup();
     
     OSCManager::get_instance().setMessageReceiver("/camera_angle", cameraAngle);
-    
-    camPosGui.setup();
 }
 
 void ofApp::setupViewPorts() {
-	float xOffset = ofGetWidth() / 3;
-	float yOffset = ofGetHeight() / 4;
-
-    viewMain.x = camPosGui.x;//xOffset;
-    viewMain.y = camPosGui.y;//0;
-	viewMain.width = xOffset * 2;
-	viewMain.height = ofGetHeight();
-    
-    /*
-	for(int i = 0; i < 4; i++){
-		viewGrid[i].x = 0;
-		viewGrid[i].y = yOffset * i;
-		viewGrid[i].width = xOffset;
-		viewGrid[i].height = yOffset;
-	}*/
+	for(int i = 0; i < viewNum; i++){
+        views[i].x = camPosGui[i].x;
+		views[i].y = camPosGui[i].y - 500;
+        views[i].width = camPosGui[i].size;
+        views[i].height = camPosGui[i].size*1.5;
+	}
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     OSCManager::get_instance().update();
-    
+    /*
     cam.lookAt(ofVec3f(0,0,0));
     secondCam.lookAt(ofVec3f(0, 0, 0));
     
@@ -83,7 +91,20 @@ void ofApp::update(){
     }
     
     cam.rotate(270, cam.getLookAtDir());
-    //secondCam.rotate(270, cam.getLookAtDir());
+    */
+    for (int i=0; i<viewNum; i++) {
+        cameras[i].lookAt(ofVec3f(0, 0, 0));
+        float cosPos = cos(ofGetElapsedTimef()/10);
+        float sinPos = sin(ofGetElapsedTimef()/10);
+        
+        if(cosPos > 0) {
+            cameras[i].setPosition(300*cosPos, 300*sinPos, 0);
+        } else {
+            cameras[i].setPosition(-300*cosPos, 300*sinPos, 0);
+        }
+        
+        cameras[i].rotate(270 - 90*i, cameras[i].getLookAtDir());
+    }
     
     brain.update();
 }
@@ -94,28 +115,22 @@ void ofApp::draw(){
     
     ofEnableBlendMode(OF_BLENDMODE_ADD);
     
-    cam.begin(viewMain);
-    ofPushStyle();
-   
-    brain.draw();
-    
-    ofPopStyle();
-    cam.end();
-    /*
-    secondCam.begin();
-    ofPushStyle();
-   
-    brain.draw();
-    
-    ofPopStyle();
-    secondCam.end();
-     */
+    for (int i=0; i<viewNum; i++) {
+        cameras[i].begin(views[i]);
+        ofPushStyle();
+        
+        brain.draw();
+        
+        ofPopStyle();
+        cameras[i].end();
+    }
     
     ofDisableDepthTest();
     
-    //ofDrawBitmapString(test, 20, 20);
-    //firstFbo.draw(0, 0, 1000, 1000);
-    camPosGui.draw();
+    /*
+    for (int i=0; i<viewNum; i++) {
+        camPosGui[i].draw(0, i*100);
+    }*/
 }
 
 //--------------------------------------------------------------
@@ -130,12 +145,11 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
 
 //--------------------------------------------------------------
 void ofApp::touchMoved(ofTouchEventArgs & touch){
-
+    setupViewPorts();
 }
 
 //--------------------------------------------------------------
 void ofApp::touchUp(ofTouchEventArgs & touch){
-    setupViewPorts();
 }
 
 //--------------------------------------------------------------

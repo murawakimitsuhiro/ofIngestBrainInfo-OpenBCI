@@ -8,14 +8,14 @@
 
 #include "CameraPositionGui.hpp"
 
-void CameraPositionGui::setup() {
+void CameraPositionGui::setup(float defX, float defY, float defSize) {
     panel.setup();
-    panel.add(x.setup("x", -50, 50, 0));
-    panel.add(y.setup("y", -50, 50, 0));
-    panel.add(width.setup("width", 300, 900, 0));
-    panel.add(height.setup("height", 300, 900, 0));
+    panel.add(x.setup("x", defX, 0, 1000));
+    panel.add(y.setup("y", defY, 0, 800));
+    panel.add(size.setup("size", defSize, 300, 900));
 }
 
-void CameraPositionGui::draw() {
+void CameraPositionGui::draw(int x, int y) {
+    panel.setPosition(x, y);
     panel.draw();
 }

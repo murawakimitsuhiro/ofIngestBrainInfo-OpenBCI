@@ -17,11 +17,10 @@ public:
     ofxPanel panel;
     ofxFloatSlider x;
     ofxFloatSlider y;
-    ofxFloatSlider width;
-    ofxFloatSlider height;
+    ofxFloatSlider size;
     
-    void setup();
-    void draw();
+    void setup(float x, float y, float size);
+    void draw(int x, int y);
 };
 
 #endif /* CameraPositionGui_hpp */

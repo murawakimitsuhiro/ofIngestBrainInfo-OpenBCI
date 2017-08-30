@@ -26,6 +26,8 @@ private:
     int nextDecomposeNum = 0;
     
     void setupOSCMessageReceive();
+    int isLearning = 0;
+    int wasStart = 0;
     
 //debug
     int gain;

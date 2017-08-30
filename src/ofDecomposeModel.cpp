@@ -33,13 +33,17 @@ void ofDecomposeModel::startDecompose() {
     }
 }
 
+void ofDecomposeModel::setStateSolid() {
+    state = solid;
+}
+
 void ofDecomposeModel::update() {
     setScaleNormalization(false);
     
     if (state == decomposting) {
         for (int i=0; i<vectors.size(); i++) {
             vectors[i] += speeds[i];
-            if (vectors[i].z > 100) {
+            if (vectors[i].z > 70) {
                 speeds[i].x = ofRandom(-12, 12);
                 speeds[i].y = ofRandom(-12, 12);
                 speeds[i].z = 5.5;
