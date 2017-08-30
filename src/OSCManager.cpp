@@ -38,7 +38,7 @@ void OSCManager::update() {
             }
         }
         
-        //dumpOSC(m);
+        dumpOSC(m);
     }
 }
 

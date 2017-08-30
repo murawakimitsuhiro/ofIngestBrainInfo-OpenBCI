@@ -33,6 +33,14 @@ void ofDecomposeModel::startDecompose() {
     }
 }
 
+void ofDecomposeModel::reset() {
+    setStateSolid();
+    decomposeBeginTime = 0;
+    vectors.clear();
+    speeds.clear();
+    colors.clear();
+}
+
 void ofDecomposeModel::setStateSolid() {
     state = solid;
 }
@@ -46,7 +54,7 @@ void ofDecomposeModel::update() {
             if (vectors[i].z > 70) {
                 speeds[i].x = ofRandom(-12, 12);
                 speeds[i].y = ofRandom(-12, 12);
-                speeds[i].z = 5.5;
+                speeds[i].z = 6.5;
                 
                 //float alpha = (vectors[i].z - 100) / 100;
                 
