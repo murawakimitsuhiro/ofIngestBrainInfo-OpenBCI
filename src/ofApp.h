@@ -25,8 +25,10 @@ public:
     
 private:
     ofEasyCam cam;
+    ofEasyCam secondCam;
     ofLight light;
     ofLight secondLight;
+    ofFbo firstFbo;
     
     BrainController brain;
     

@@ -13,8 +13,12 @@ void ofApp::setup(){
     ofEnableSeparateSpecularLight();
     ofSetOrientation(OF_ORIENTATION_90_LEFT);
     
+    firstFbo.allocate(1200, 675);
+    firstFbo.setUseTexture(true);
+    
 //camera
     cam.setDistance(250);
+    secondCam.setDistance(250);
     
 /*light setup
     ofFloatColor initAmbColor = ofFloatColor(0.8, 0.8, 0.8,1.0);
@@ -46,18 +50,43 @@ void ofApp::update(){
     OSCManager::get_instance().update();
     
     cam.lookAt(ofVec3f(0,0,0));
+    secondCam.lookAt(ofVec3f(0, 0, 0));
     
     float cosPos = cos(ofGetElapsedTimef()/10);
     float sinPos = sin(ofGetElapsedTimef()/10);
     
     if(cosPos > 0) {
         cam.setPosition(300*cosPos, 300*sinPos, 0);
+        secondCam.setPosition(300*cosPos, 300*sinPos, 0);
     } else {
         cam.setPosition(-300*cosPos, 300*sinPos, 0);
+        secondCam.setPosition(-300*cosPos, -300*sinPos, 0);
     }
+    
     cam.rotate(270, cam.getLookAtDir());
+    //secondCam.rotate(270, cam.getLookAtDir());
     
     brain.update();
+    /*
+    firstFbo.begin();
+    ofClear(0);
+    
+    ofEnableDepthTest();
+    
+    ofEnableBlendMode(OF_BLENDMODE_ADD);
+    
+    cam.begin();
+    ofPushStyle();
+   
+    brain.draw();
+    
+    ofPopStyle();
+    cam.end();
+    
+    ofDisableDepthTest();
+    
+    firstFbo.end();
+     */
 }
 
 //--------------------------------------------------------------
@@ -74,9 +103,18 @@ void ofApp::draw(){
     ofPopStyle();
     cam.end();
     
+    secondCam.begin();
+    ofPushStyle();
+   
+    brain.draw();
+    
+    ofPopStyle();
+    secondCam.end();
+    
     ofDisableDepthTest();
     
     //ofDrawBitmapString(test, 20, 20);
+    //firstFbo.draw(0, 0, 1000, 1000);
 }
 
 //--------------------------------------------------------------
